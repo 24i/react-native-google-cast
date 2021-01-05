@@ -289,10 +289,28 @@ RCT_EXPORT_METHOD(seek : (int)playPosition) {
   }
 }
 
+RCT_EXPORT_METHOD(skip : (int)interval) {
+  if (castSession) {
+    GCKMediaSeekOptions *seek = [[GCKMediaSeekOptions alloc] init];
+    seek.relative = YES;
+    seek.resumeState = GCKMediaResumeStatePlay;
+    seek.interval = interval;
+    [castSession.remoteMediaClient seekWithOptions:seek];
+  }
+}
+
 RCT_EXPORT_METHOD(setVolume : (float)volume) {
     if (castSession) {
       dispatch_sync(dispatch_get_main_queue(), ^{
         [castSession setDeviceVolume:volume];
+      });
+    }
+}
+
+RCT_EXPORT_METHOD(setDeviceMuted : (BOOL)muted) {
+    if (castSession) {
+      dispatch_sync(dispatch_get_main_queue(), ^{
+        [castSession setDeviceMuted:muted];
       });
     }
 }
@@ -302,7 +320,16 @@ RCT_EXPORT_METHOD(getVolume: (RCTPromiseResolveBlock) resolve
     if (castSession) {
         resolve([NSNumber numberWithFloat:castSession.currentDeviceVolume]);
     }else{
-      reject(@"Error geeting volume", @"No cast session available", [[NSError alloc]init]);
+      reject(@"Error geting volume", @"No cast session available", [[NSError alloc]init]);
+    }
+}
+
+RCT_EXPORT_METHOD(isMuted: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject) {
+    if (castSession) {
+        resolve([NSNumber numberWithBool:castSession.currentDeviceMuted]);
+    }else{
+      reject(@"Error isMuted", @"No cast session available", [[NSError alloc]init]);
     }
 }
 
@@ -351,12 +378,39 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
 RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
 
-    GCKMediaInformation* metadata = castSession.remoteMediaClient.mediaStatus.mediaInformation;
-    //Or maybe only mediaInformation???
-    if (metadata==nil){
+    if (mediaInfo == nil){
         reject(@"Error geeting media metadata", @"No metatada available", [[NSError alloc]init]);
     }else{
-        resolve(metadata.description);
+
+      NSMutableArray *images = [[NSMutableArray alloc] init]; 
+      for (GCKImage* currentImage in [mediaInfo.metadata images])
+      {
+          [images addObject:[currentImage.URL absoluteString]];
+      }
+
+      NSDictionary *metadata = [[NSDictionary alloc] 
+      initWithObjectsAndKeys:
+      [mediaInfo.metadata stringForKey:kGCKMetadataKeyTitle],@"title",
+      [mediaInfo.metadata stringForKey:kGCKMetadataKeyStudio],@"studio",
+      [mediaInfo.metadata stringForKey:kGCKMetadataKeySubtitle],@"subtitle",
+       mediaInfo.customData, @"customData",
+       images,@"images",
+      nil];   
+
+      NSDictionary *myDictionary = [[NSDictionary alloc] 
+      initWithObjectsAndKeys:
+      mediaInfo.contentID,@"contentId",
+      metadata, @"metadata",
+      nil];   
+
+      NSMutableDictionary *result = [myDictionary mutableCopy];
+      NSError *error;
+      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:&error];
+      if(error != nil){
+          reject(@"Error geeting media metadata", @"Cant convert it to JSON", error);
+      }
+      NSString *resultAsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      resolve(resultAsString);
     }
 }
 

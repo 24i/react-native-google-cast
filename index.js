@@ -112,6 +112,9 @@ export default {
   setVolume(volume: number) {
     return GoogleCast.setVolume(volume)
   },
+  setDeviceMuted(muted: boolean) {
+    return GoogleCast.setDeviceMuted(muted)
+  },
   initChannel(namespace: string) {
     return GoogleCast.initChannel(namespace)
   },
@@ -156,6 +159,14 @@ export default {
   getVolume(): Promise<number> {
     return GoogleCast.getVolume()
   },
+  /**
+   * Is device muted.
+   *
+   * @returns muted.
+   */
+  isMuted(): Promise<boolean> {
+    return GoogleCast.isMuted()
+  },
 
   /**
    * Disconnect.
@@ -165,9 +176,14 @@ export default {
   unselectRoute(): Promise<number> {
     return GoogleCast.unselectRoute()
   },
-
-  
-
+  /**
+   * Skip the x miliseconds.
+   *
+   * @param {number} interval
+   */
+  skip(interval: number) {
+    return GoogleCast.skip(interval)
+  },
 
   /**
    * Enable/disable subtitles, optionally selecting a preferred subtitle language.
