@@ -2,11 +2,6 @@
     "categories": [
         {
             "name": "Movies",
-            "hls":"https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/",
-            "dash":"https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/dash/",
-            "mp4":"https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/",
-            "images":"https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/images/",
-            "tracks":"https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/tracks/",
             "videos": [
                 {
                     "subtitle": "Fusce id nisi turpis. ",
@@ -27,9 +22,9 @@
                             "url": "DesigningForGoogleCast.mp4"
                         }
                     ],
-                    "thumb": "images/DesigningForGoogleCast-480x270.jpg",
-                    "image-480x270": "480x270/DesigningForGoogleCast2-480x270.jpg",
-                    "image-780x1200": "780x1200/DesigningForGoogleCast-887x1200.jpg",
+                    "thumb": "https://i.ytimg.com/vi/aqz-KE-bpKQ/maxresdefault.jpg",
+                    "image-480x270": "https://i.ytimg.com/vi/aqz-KE-bpKQ/maxresdefault.jpg",
+                    "image-780x1200": "https://i.ytimg.com/vi/aqz-KE-bpKQ/maxresdefault.jpg",
                     "title": "TestStream",
                     "studio": "XXXX",
                     "duration" : 333,
