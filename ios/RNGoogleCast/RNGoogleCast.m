@@ -414,6 +414,35 @@ RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
     }
 }
 
+RCT_EXPORT_METHOD(getMediaStatus: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject) {
+    GCKMediaStatus *status =  castSession.remoteMediaClient.mediaStatus;
+    if (status == nil){
+        reject(@"Error geeting media status", @"No metatada available", [[NSError alloc]init]);
+    }else{
+
+       map.putInt("idleReason", ms.getIdleReason());
+                map.putInt("playerState", ms.getPlayerState());
+                map.putInt("currentItemId", ms.getCurrentItemId());
+
+      NSDictionary *myDictionary = [[NSDictionary alloc] 
+      initWithObjectsAndKeys:
+      status.idleReason,@"idleReason",
+      status.playerState, @"playerState",
+      status.currentItemID, @"currentItemId",
+      nil];   
+
+      NSMutableDictionary *result = [myDictionary mutableCopy];
+      NSError *error;
+      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:&error];
+      if(error != nil){
+          reject(@"Error geeting media status", @"Cant convert it to JSON", error);
+      }
+      NSString *resultAsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      resolve(resultAsString);
+    }
+}
+
 
 #pragma mark - GCKSessionManagerListener events
 
