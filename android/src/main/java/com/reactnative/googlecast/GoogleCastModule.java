@@ -220,6 +220,28 @@ public class GoogleCastModule
     }
 
     @ReactMethod
+    public void getMediaStatus(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                RemoteMediaClient remoteMediaClient = mCastSession.getRemoteMediaClient();
+                if (remoteMediaClient == null) {
+                    promise.reject("getMediaStatus","No remoteMediaClient");
+                }
+                MediaStatus ms = remoteMediaClient.getMediaStatus();
+                if (ms == null) {
+                    promise.reject("getMediaStatus","No MediaStatus");
+                }
+                WritableMap map = Arguments.createMap();
+                map.putInt("idleReason", ms.getIdleReason());
+                map.putInt("playerState", ms.getPlayerState());
+                map.putInt("currentItemId", ms.getCurrentItemId());
+                promise.resolve(map);
+            }
+        });
+    }
+
+    @ReactMethod
     public void castMedia(final ReadableMap params) {
         if (mCastSession == null) {
             return;
