@@ -209,10 +209,12 @@ public class GoogleCastModule
                 RemoteMediaClient remoteMediaClient = mCastSession.getRemoteMediaClient();
                 if (remoteMediaClient == null) {
                     promise.reject("getMediaInfo","No remoteMediaClient");
+                    return;
                 }
                 MediaInfo mi = remoteMediaClient.getMediaInfo();
                 if (mi == null) {
                     promise.reject("getMediaInfo","No MediaInfo");
+                    return;
                 }
                 promise.resolve(mi.toJson().toString());
             }
@@ -224,13 +226,19 @@ public class GoogleCastModule
         getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
+                if (mCastSession == null) {
+                    promise.reject("getMediaStatus","No Session");
+                    return;
+                }
                 RemoteMediaClient remoteMediaClient = mCastSession.getRemoteMediaClient();
                 if (remoteMediaClient == null) {
                     promise.reject("getMediaStatus","No remoteMediaClient");
+                    return;
                 }
                 MediaStatus ms = remoteMediaClient.getMediaStatus();
                 if (ms == null) {
                     promise.reject("getMediaStatus","No MediaStatus");
+                    return;
                 }
                 WritableMap map = Arguments.createMap();
                 map.putInt("idleReason", ms.getIdleReason());
