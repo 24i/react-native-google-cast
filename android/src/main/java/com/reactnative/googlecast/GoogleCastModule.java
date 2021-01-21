@@ -240,10 +240,16 @@ public class GoogleCastModule
                     promise.reject("getMediaStatus","No MediaStatus");
                     return;
                 }
+
+                double position = ms.getStreamPosition();
+                double duration = ms.getMediaInfo() != null ? ms.getMediaInfo().getStreamDuration() : 0;
+
                 WritableMap map = Arguments.createMap();
                 map.putInt("idleReason", ms.getIdleReason());
                 map.putInt("playerState", ms.getPlayerState());
-                map.putInt("currentItemId", ms.getCurrentItemId());
+                map.putBoolean("muted", ms.isMute());
+                map.putDouble("streamPosition", position);
+                map.putDouble("streamDuration", duration);
                 promise.resolve(map);
             }
         });

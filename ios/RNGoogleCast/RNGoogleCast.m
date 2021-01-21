@@ -418,21 +418,21 @@ RCT_EXPORT_METHOD(getMediaStatus: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
     GCKMediaStatus *status =  castSession.remoteMediaClient.mediaStatus;
     if (status == nil){
-        reject(@"Error geeting media status", @"No metatada available", [[NSError alloc]init]);
+        reject(@"Error geeting media status", @"No media status available", [[NSError alloc]init]);
     }else{
 
-       map.putInt("idleReason", ms.getIdleReason());
-                map.putInt("playerState", ms.getPlayerState());
-                map.putInt("currentItemId", ms.getCurrentItemId());
+        double position = status.streamPosition;
+        double duration = status.mediaInformation.streamDuration;
 
-      NSDictionary *myDictionary = [[NSDictionary alloc] 
-      initWithObjectsAndKeys:
-      status.idleReason,@"idleReason",
-      status.playerState, @"playerState",
-      status.currentItemID, @"currentItemId",
-      nil];   
+       NSDictionary *statusDict = @{
+          @"playerState": @(status.playerState),
+          @"idleReason": @(status.idleReason),
+          @"muted": @(status.isMuted),
+          @"streamPosition": isinf(position) || isnan(position) ? [NSNull null] : @(position),
+          @"streamDuration": isinf(duration) || isnan(duration) ? [NSNull null] : @(duration),
+      };  
 
-      NSMutableDictionary *result = [myDictionary mutableCopy];
+      NSMutableDictionary *result = [statusDict mutableCopy];
       NSError *error;
       NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:&error];
       if(error != nil){
@@ -442,6 +442,7 @@ RCT_EXPORT_METHOD(getMediaStatus: (RCTPromiseResolveBlock) resolve
       resolve(resultAsString);
     }
 }
+
 
 
 #pragma mark - GCKSessionManagerListener events
