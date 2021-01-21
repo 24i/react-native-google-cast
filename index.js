@@ -150,6 +150,14 @@ export default {
   getMediaInfo(): Promise<string> {
     return GoogleCast.getMediaInfo()
   },
+    /**
+   * Get actual remote player state.
+   *
+   * @returns success.
+   */
+  getMediaStatus(): Promise<string> {
+    return GoogleCast.getMediaStatus()
+  },
 
   /**
    * Get actual volume.

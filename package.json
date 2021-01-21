@@ -1,5 +1,5 @@
 {
-  "name": "react-native-google-cast",
+  "name": "@24/react-native-google-cast",
   "version": "3.3.0",
   "description": "React Native wrapper for the Google Cast SDK for iOS and Android",
   "main": "index.js",
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:react-native-google-cast/react-native-google-cast.git"
+    "url": "git@github.com:24i/react-native-google-cast.git"
   },
   "dependencies": {
     "prop-types": "^15.6.0",

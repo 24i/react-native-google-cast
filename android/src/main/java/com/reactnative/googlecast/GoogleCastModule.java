@@ -209,12 +209,48 @@ public class GoogleCastModule
                 RemoteMediaClient remoteMediaClient = mCastSession.getRemoteMediaClient();
                 if (remoteMediaClient == null) {
                     promise.reject("getMediaInfo","No remoteMediaClient");
+                    return;
                 }
                 MediaInfo mi = remoteMediaClient.getMediaInfo();
                 if (mi == null) {
                     promise.reject("getMediaInfo","No MediaInfo");
+                    return;
                 }
                 promise.resolve(mi.toJson().toString());
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getMediaStatus(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mCastSession == null) {
+                    promise.reject("getMediaStatus","No Session");
+                    return;
+                }
+                RemoteMediaClient remoteMediaClient = mCastSession.getRemoteMediaClient();
+                if (remoteMediaClient == null) {
+                    promise.reject("getMediaStatus","No remoteMediaClient");
+                    return;
+                }
+                MediaStatus ms = remoteMediaClient.getMediaStatus();
+                if (ms == null) {
+                    promise.reject("getMediaStatus","No MediaStatus");
+                    return;
+                }
+
+                double position = ms.getStreamPosition();
+                double duration = ms.getMediaInfo() != null ? ms.getMediaInfo().getStreamDuration() : 0;
+
+                WritableMap map = Arguments.createMap();
+                map.putInt("idleReason", ms.getIdleReason());
+                map.putInt("playerState", ms.getPlayerState());
+                map.putBoolean("muted", ms.isMute());
+                map.putDouble("streamPosition", position);
+                map.putDouble("streamDuration", duration);
+                promise.resolve(map);
             }
         });
     }
