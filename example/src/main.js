@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import styles from './main.style'
-import GoogleCast, { CastButton } from 'react-native-google-cast'
+import GoogleCast, { CastButton } from '@24i/react-native-google-cast'
 import ActionButton from 'react-native-action-button'
 
 // Establishing connection to Chromecast
