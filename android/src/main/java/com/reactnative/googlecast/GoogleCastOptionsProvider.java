@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.cast.MediaMetadata;
+import com.facebook.react.GoogleCastActivity;
 import com.google.android.gms.cast.framework.CastOptions;
 import com.google.android.gms.cast.framework.OptionsProvider;
 import com.google.android.gms.cast.framework.SessionProvider;
@@ -28,7 +29,7 @@ public class GoogleCastOptionsProvider implements OptionsProvider {
                               MediaIntentReceiver.ACTION_STOP_CASTING),
                 new int[] {1, 2})
             .setTargetActivityClassName(
-                GoogleCastExpandedControlsActivity.class.getName())
+                GoogleCastActivity.class.getName())
             .build();
 
     CastMediaOptions mediaOptions =
@@ -36,7 +37,7 @@ public class GoogleCastOptionsProvider implements OptionsProvider {
             .setImagePicker(new ImagePickerImpl())
             .setNotificationOptions(notificationOptions)
             .setExpandedControllerActivityClassName(
-                GoogleCastExpandedControlsActivity.class.getName())
+                GoogleCastActivity.class.getName())
             .build();
 
     return new CastOptions.Builder()

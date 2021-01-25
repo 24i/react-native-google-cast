@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.author        = { 'petrbela' => 'github@petrbela.com' }
   s.homepage      = 'https://github.com/24i/react-native-google-cast.git'
   s.license       = package['license']
-  s.platform      = :ios, '9.0'
+  s.platform      = :ios, '10.0'
 
   s.source        = { :git => 'https://github.com/24i/react-native-google-cast.git', :tag => s.version.to_s }
   s.source_files  = 'RNGoogleCast/**/*.{h,m}'
