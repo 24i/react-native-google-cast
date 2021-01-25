@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Default' do |ss|
     ss.dependency "react-native-google-cast/RNGoogleCast"
-    ss.dependency 'google-cast-sdk', '<= 4.4.5'
+    ss.dependency 'google-cast-sdk', '<= 4.5.3'
   end
 
   s.subspec 'NoBluetooth' do |ss|
