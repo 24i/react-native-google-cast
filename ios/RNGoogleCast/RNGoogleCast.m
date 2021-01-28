@@ -142,9 +142,15 @@ RCT_EXPORT_METHOD(showCastPicker) {
 });
 }
 
-RCT_EXPORT_METHOD(showIntroductoryOverlay) {
+RCT_EXPORT_METHOD(showIntroductoryOverlay:(id)options
+                  resolver: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject) {
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GCKCastContext.sharedInstance presentCastInstructionsViewControllerOnce];
+    if (!options[@"once"]) {
+      [GCKCastContext.sharedInstance clearCastInstructionsShownFlag];
+    }
+
+    resolve(@([GCKCastContext.sharedInstance presentCastInstructionsViewControllerOnce]));
   });
 }
 

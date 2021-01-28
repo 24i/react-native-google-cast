@@ -61,7 +61,24 @@ export default {
     return GoogleCast.seek(playPosition)
   },
   launchExpandedControls: GoogleCast.launchExpandedControls,
-  showIntroductoryOverlay: GoogleCast.showIntroductoryOverlay,
+  /**
+   * Displays the Expanded Controls screen programmatically. Users can also open it by clicking on Mini Controls.
+   *
+   * @returns `true` if the Expanded Controls were shown, `false` if it was not shown.
+   */
+  showExpandedControls() {
+    return GoogleCast.showExpandedControls()
+  },
+  /**
+   * If it has not been shown before, presents a fullscreen modal view controller that calls attention to the Cast button and displays some brief instructional text about its use.
+   *
+   * By default, the overlay is only displayed once. To change this, pass `once: false` in the options.
+   *
+   * @returns Promise that becomes `true` if the view controller was shown, `false` if it was not shown because it had already been shown before, or if the Cast Button was not found.
+   */
+  showIntroductoryOverlay(options){
+    return GoogleCast.showIntroductoryOverlay({ once: true, ...options })
+  },
   setVolume(volume) {
     return GoogleCast.setVolume(volume)
   },
