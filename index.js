@@ -1,5 +1,5 @@
 // @flow
-import PropTypes from 'prop-types';
+
 import {
   DeviceEventEmitter,
   NativeEventEmitter,
