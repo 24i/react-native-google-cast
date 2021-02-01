@@ -1,15 +1,18 @@
 package com.reactnative.googlecast;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.ReadableMap;
 
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 public class ReadableMapUtils {
-    public static @Nullable String getString(@NonNull ReadableMap map, @NonNull String key) {
+    public static @Nullable
+    String getString(@NonNull ReadableMap map, @NonNull String key) {
         if (!map.hasKey(key)) {
             return null;
         }
