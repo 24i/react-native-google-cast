@@ -1,7 +1,8 @@
 package com.reactnative.googlecast;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.ReadableMap;
 import com.google.android.gms.cast.MediaInfo;
@@ -60,7 +61,8 @@ public class MediaInfoBuilder {
                 }
             };
 
-    public static @NonNull MediaInfo buildMediaInfo(@NonNull ReadableMap parameters) {
+    public static @NonNull
+    MediaInfo buildMediaInfo(@NonNull ReadableMap parameters) {
         MediaMetadata movieMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
 
         String title = ReadableMapUtils.getString(parameters, "title");

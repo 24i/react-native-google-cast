@@ -12,45 +12,11 @@ const { RNGoogleCast: GoogleCast } = NativeModules
 import CastButton from './CastButton'
 export { CastButton }
 
-type CastDevice = {
-  id: string,
-  version: string,
-  name: string,
-  model: string,
-}
-
-type CastState =
-  | 'NoDevicesAvailable'
-  | 'NotConnected'
-  | 'Connecting'
-  | 'Connected'
-
-type TextTrackStyle = {
-  backgroundColor?: string,
-  edgeColor?: string,
-  edgeType?: 'depressed' | 'dropShadow' | 'none' | 'outline' | 'raised',
-  fontFamily?: string,
-  fontGenericFamily?:
-    | 'casual'
-    | 'cursive'
-    | 'monoSansSerif'
-    | 'monoSerif'
-    | 'sansSerif'
-    | 'serif'
-    | 'smallCaps',
-  fontScale?: number,
-  fontStyle?: 'bold' | 'boldItalic' | 'italic' | 'normal',
-  foregroundColor?: string,
-  windowColor?: string,
-  windowCornerRadius?: number,
-  windowType?: 'none' | 'normal' | 'rounded',
-}
-
 export default {
-  getCastDevice(): Promise<CastDevice> {
+  getCastDevice() {
     return GoogleCast.getCastDevice()
   },
-  getCastState(): Promise<CastState> {
+  getCastState() {
     return GoogleCast.getCastState().then(
       state =>
         ['NoDevicesAvailable', 'NotConnected', 'Connecting', 'Connected'][
@@ -58,20 +24,7 @@ export default {
         ],
     )
   },
-  castMedia(params: {
-    mediaUrl: string,
-    title?: string,
-    subtitle?: string,
-    studio?: string,
-    imageUrl?: string,
-    posterUrl?: string,
-    contentType?: string,
-    streamDuration?: number,
-    playPosition?: number,
-    isLive?: boolean,
-    customData?: Object,
-    textTrackStyle?: TextTrackStyle,
-  }) {
+  castMedia(params) {
     return GoogleCast.castMedia(params)
   },
   /**
@@ -84,7 +37,7 @@ export default {
    * @param {Boolean} stopCasting Whether casting of content on the receiver should be stopped when the session is ended.
    * @returns {Promise}
    */
-  endSession(stopCasting: Boolean = false): Promise {
+  endSession(stopCasting = false) {
     return GoogleCast.endSession(stopCasting)
   },
   /**
@@ -104,21 +57,38 @@ export default {
    *
    * @param {number} playPosition
    */
-  seek(playPosition: number) {
+  seek(playPosition) {
     return GoogleCast.seek(playPosition)
   },
   launchExpandedControls: GoogleCast.launchExpandedControls,
-  showIntroductoryOverlay: GoogleCast.showIntroductoryOverlay,
-  setVolume(volume: number) {
+  /**
+   * Displays the Expanded Controls screen programmatically. Users can also open it by clicking on Mini Controls.
+   *
+   * @returns `true` if the Expanded Controls were shown, `false` if it was not shown.
+   */
+  showExpandedControls() {
+    return GoogleCast.showExpandedControls()
+  },
+  /**
+   * If it has not been shown before, presents a fullscreen modal view controller that calls attention to the Cast button and displays some brief instructional text about its use.
+   *
+   * By default, the overlay is only displayed once. To change this, pass `once: false` in the options.
+   *
+   * @returns Promise that becomes `true` if the view controller was shown, `false` if it was not shown because it had already been shown before, or if the Cast Button was not found.
+   */
+  showIntroductoryOverlay(options){
+    return GoogleCast.showIntroductoryOverlay({ once: true, ...options })
+  },
+  setVolume(volume) {
     return GoogleCast.setVolume(volume)
   },
-  setDeviceMuted(muted: boolean) {
+  setDeviceMuted(muted) {
     return GoogleCast.setDeviceMuted(muted)
   },
-  initChannel(namespace: string) {
+  initChannel(namespace) {
     return GoogleCast.initChannel(namespace)
   },
-  sendMessage(namespace: string, message: string) {
+  sendMessage(namespace, message) {
     return GoogleCast.sendMessage(message, namespace)
   },
   showCastPicker(){
@@ -130,7 +100,7 @@ export default {
    *
    * @returns map of route ids and names.
    */
-  getRoutes(): Promise<Array<{ id: string, name: string }>> {
+  getRoutes() {
     return GoogleCast.getRoutes()
   },
 
@@ -139,7 +109,7 @@ export default {
    *
    * @returns success.
    */
-  selectRoute(id: string): Promise<boolean> {
+  selectRoute(id) {
     return GoogleCast.selectRoute(id)
   },
   /**
@@ -147,7 +117,7 @@ export default {
    *
    * @returns success.
    */
-  getMediaInfo(): Promise<string> {
+  getMediaInfo() {
     return GoogleCast.getMediaInfo()
   },
     /**
@@ -155,7 +125,7 @@ export default {
    *
    * @returns success.
    */
-  getMediaStatus(): Promise<string> {
+  getMediaStatus() {
     return GoogleCast.getMediaStatus()
   },
 
@@ -164,7 +134,7 @@ export default {
    *
    * @returns success.
    */
-  getVolume(): Promise<number> {
+  getVolume() {
     return GoogleCast.getVolume()
   },
   /**
@@ -172,7 +142,7 @@ export default {
    *
    * @returns muted.
    */
-  isMuted(): Promise<boolean> {
+  isMuted() {
     return GoogleCast.isMuted()
   },
 
@@ -181,7 +151,7 @@ export default {
    *
    * @returns success.
    */
-  unselectRoute(): Promise<number> {
+  unselectRoute() {
     return GoogleCast.unselectRoute()
   },
   /**
@@ -189,7 +159,7 @@ export default {
    *
    * @param {number} interval
    */
-  skip(interval: number) {
+  skip(interval) {
     return GoogleCast.skip(interval)
   },
 
@@ -199,7 +169,7 @@ export default {
    * @param {boolean} enabled
    * @param {boolean} languageCode
    */
-  toggleSubtitles(enabled: boolean, languageCode?: string) {
+  toggleSubtitles(enabled, languageCode) {
     return GoogleCast.toggleSubtitles(enabled, languageCode)
   },
 

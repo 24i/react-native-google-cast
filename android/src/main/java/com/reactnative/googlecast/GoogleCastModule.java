@@ -5,7 +5,9 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.mediarouter.media.MediaRouter;
+import androidx.mediarouter.app.MediaRouteButton;
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -22,26 +24,26 @@ import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaSeekOptions;
 import com.google.android.gms.cast.MediaStatus;
 import com.google.android.gms.cast.MediaTrack;
-import com.google.android.gms.cast.MediaSeekOptions;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.SessionManagerListener;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
+import com.google.android.gms.cast.framework.IntroductoryOverlay;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.common.images.WebImage;
-import com.reactnative.googlecast.GoogleCastButtonManager;
 
-import static com.google.android.gms.cast.MediaSeekOptions.RESUME_STATE_PLAY;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.google.android.gms.cast.MediaSeekOptions.RESUME_STATE_PLAY;
 
 public class GoogleCastModule
         extends ReactContextBaseJavaModule implements LifecycleEventListener {
@@ -565,6 +567,35 @@ public class GoogleCastModule
             Log.i(REACT_CLASS, "Error :> " + GOOGLE_CAST_NOT_AVAILABLE_MESSAGE);
         }
 
+    }
+
+    @ReactMethod
+    public void showIntroductoryOverlay(final ReadableMap options, final Promise promise) {
+        final MediaRouteButton button = GoogleCastButtonManager.getGoogleCastButtonManagerInstance();
+        if ((button != null) && button.getVisibility() == View.VISIBLE) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+            IntroductoryOverlay.Builder builder = new IntroductoryOverlay.Builder(getCurrentActivity(), button);
+
+            if (options.getBoolean("once")) {
+                builder.setSingleTime();
+            }
+
+            builder.setOnOverlayDismissedListener(
+                new IntroductoryOverlay.OnOverlayDismissedListener() {
+                @Override
+                public void onOverlayDismissed() {
+                    promise.resolve(true);
+                }
+                });
+
+            IntroductoryOverlay overlay = builder.build();
+
+            overlay.show();
+            }
+        });
+        }
     }
 
     @ReactMethod
