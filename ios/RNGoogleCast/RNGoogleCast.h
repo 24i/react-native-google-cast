@@ -15,6 +15,7 @@ static NSString *const MEDIA_STATUS_UPDATED = @"GoogleCast:MediaStatusUpdated";
 static NSString *const MEDIA_PLAYBACK_STARTED = @"GoogleCast:MediaPlaybackStarted";
 static NSString *const MEDIA_PLAYBACK_ENDED = @"GoogleCast:MediaPlaybackEnded";
 static NSString *const MEDIA_PROGRESS_UPDATED = @"GoogleCast:MediaProgressUpdated";
+static NSString *const MEDIA_METADATA_CHANGED = @"GoogleCast:MediaMetadataChanged";
 
 static NSString *const CHANNEL_MESSAGE_RECEIVED = @"GoogleCast:ChannelMessageReceived";
 static NSString *const CHANNEL_CONNECTED = @"GoogleCast:ChannelConnected";
