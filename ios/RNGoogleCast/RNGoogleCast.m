@@ -45,6 +45,7 @@ RCT_EXPORT_MODULE();
     @"MEDIA_PLAYBACK_STARTED" : MEDIA_PLAYBACK_STARTED,
     @"MEDIA_PLAYBACK_ENDED" : MEDIA_PLAYBACK_ENDED,
     @"MEDIA_PROGRESS_UPDATED" : MEDIA_PROGRESS_UPDATED,
+    @"MEDIA_METADATA_CHANGED" : MEDIA_METADATA_CHANGED,
 
     @"CHANNEL_CONNECTED" : CHANNEL_CONNECTED,
     @"CHANNEL_MESSAGE_RECEIVED" : CHANNEL_MESSAGE_RECEIVED,
@@ -59,7 +60,7 @@ RCT_EXPORT_MODULE();
     SESSION_STARTING, SESSION_STARTED, SESSION_START_FAILED, SESSION_SUSPENDED,
     SESSION_RESUMING, SESSION_RESUMED, SESSION_ENDING, SESSION_ENDED,
 
-    MEDIA_STATUS_UPDATED, MEDIA_PLAYBACK_STARTED, MEDIA_PLAYBACK_ENDED, MEDIA_PROGRESS_UPDATED,
+    MEDIA_STATUS_UPDATED, MEDIA_PLAYBACK_STARTED, MEDIA_PLAYBACK_ENDED, MEDIA_PROGRESS_UPDATED, MEDIA_METADATA_CHANGED,
 
     CHANNEL_CONNECTED, CHANNEL_MESSAGE_RECEIVED, CHANNEL_DISCONNECTED
   ];
@@ -383,25 +384,27 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
 
 RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
-
-    if (mediaInfo == nil){
-        reject(@"Error geeting media metadata", @"No metatada available", [[NSError alloc]init]);
+   
+    if (castSession == nil){
+        reject(@"Error geeting media metadata", @"No castSession", [[NSError alloc]init]);
     }else{
-
+      GCKMediaInformation *mi = castSession.remoteMediaClient.mediaStatus.mediaInformation;
+      GCKMediaMetadata  *mmeta = mi.metadata;
+  
       NSMutableArray *images = [[NSMutableArray alloc] init]; 
-      for (GCKImage* currentImage in [mediaInfo.metadata images])
+      for (GCKImage* currentImage in mmeta.images)
       {
           [images addObject:[currentImage.URL absoluteString]];
       }
+      //NSArray *keys = [mmeta allKeys];
 
       NSDictionary *metadata = [[NSDictionary alloc] 
       initWithObjectsAndKeys:
-      [mediaInfo.metadata stringForKey:kGCKMetadataKeyTitle],@"title",
-      [mediaInfo.metadata stringForKey:kGCKMetadataKeyStudio],@"studio",
-      [mediaInfo.metadata stringForKey:kGCKMetadataKeySubtitle],@"subtitle",
-       mediaInfo.customData, @"customData",
-       images,@"images",
-      nil];   
+      //keys,@"keys",
+      [mmeta stringForKey:kGCKMetadataKeyTitle],@"title",
+      [mmeta stringForKey:kGCKMetadataKeySubtitle],@"subtitle",
+      images,@"images",
+      nil];
 
       NSDictionary *myDictionary = [[NSDictionary alloc] 
       initWithObjectsAndKeys:
@@ -422,6 +425,13 @@ RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
 
 RCT_EXPORT_METHOD(getMediaStatus: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
+    if(castSession == nil){
+        reject(@"Error geeting media status", @"No castSession", [[NSError alloc]init]);
+    }
+    if(castSession.remoteMediaClient == nil){
+        reject(@"Error geeting media status", @"No remoteMediaClient", [[NSError alloc]init]);
+    }
+   
     GCKMediaStatus *status =  castSession.remoteMediaClient.mediaStatus;
     if (status == nil){
         reject(@"Error geeting media status", @"No media status available", [[NSError alloc]init]);
@@ -507,6 +517,30 @@ RCT_EXPORT_METHOD(getMediaStatus: (RCTPromiseResolveBlock) resolve
     currentItemID = mediaStatus.currentItemID;
     playbackStarted = false;
     playbackEnded = false;
+
+      GCKMediaMetadata  *mmeta = mediaStatus.mediaInformation.metadata;
+  
+      NSMutableArray *images = [[NSMutableArray alloc] init];
+      for (GCKImage* currentImage in mmeta.images)
+      {
+          [images addObject:[currentImage.URL absoluteString]];
+      }
+  
+      NSDictionary *metadata = [[NSDictionary alloc]
+      initWithObjectsAndKeys:
+      [mmeta stringForKey:kGCKMetadataKeyTitle],@"title",
+      [mmeta stringForKey:kGCKMetadataKeySubtitle],@"subtitle",
+      images,@"images",
+      nil];
+
+      NSDictionary *metadataToSend = [[NSDictionary alloc]
+      initWithObjectsAndKeys:
+      mediaStatus.mediaInformation.contentID,@"contentId",
+      metadata, @"metadata",
+      nil];
+      
+    [self sendEventWithName:MEDIA_METADATA_CHANGED body:@{@"mediaMetadata":metadataToSend}];
+    
   }
 
   double position = mediaStatus.streamPosition;

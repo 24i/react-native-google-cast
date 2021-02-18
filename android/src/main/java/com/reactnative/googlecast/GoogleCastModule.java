@@ -70,6 +70,9 @@ public class GoogleCastModule
             "GoogleCast:MediaPlaybackEnded";
     protected static final String MEDIA_PROGRESS_UPDATED =
             "GoogleCast:MediaProgressUpdated";
+    protected static final String MEDIA_METADATA_CHANGED =
+            "GoogleCast:MediaMetadataChanged";
+            
 
     protected static final  String CHANNEL_MESSAGE_RECEIVED = "GoogleCast:ChannelMessageReceived";
 
@@ -116,6 +119,7 @@ public class GoogleCastModule
         constants.put("MEDIA_PLAYBACK_STARTED", MEDIA_PLAYBACK_STARTED);
         constants.put("MEDIA_PLAYBACK_ENDED", MEDIA_PLAYBACK_ENDED);
         constants.put("MEDIA_PROGRESS_UPDATED", MEDIA_PROGRESS_UPDATED);
+        constants.put("MEDIA_METADATA_CHANGED", MEDIA_METADATA_CHANGED);
 
         constants.put("CAST_AVAILABLE", CAST_AVAILABLE);
 

@@ -86,6 +86,7 @@ declare module 'react-native-google-cast' {
     MEDIA_PLAYBACK_STARTED: string
     MEDIA_PLAYBACK_ENDED: string
     MEDIA_PROGRESS_UPDATED: string
+    MEDIA_METADATA_CHANGED: string
     
     CHANNEL_CONNECTED: string
     CHANNEL_DISCONNECTED: string
