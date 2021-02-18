@@ -51,4 +51,4 @@ var GoogleCastButton = requireNativeComponent(
   },
 )
 
-export default CastButton
+export default CastButton;
