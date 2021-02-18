@@ -24,6 +24,7 @@ import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.MediaSeekOptions;
 import com.google.android.gms.cast.MediaStatus;
 import com.google.android.gms.cast.MediaTrack;
@@ -35,6 +36,7 @@ import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.cast.framework.IntroductoryOverlay;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.images.WebImage;
 
 
 import java.io.IOException;
@@ -72,7 +74,7 @@ public class GoogleCastModule
             "GoogleCast:MediaProgressUpdated";
     protected static final String MEDIA_METADATA_CHANGED =
             "GoogleCast:MediaMetadataChanged";
-            
+
 
     protected static final  String CHANNEL_MESSAGE_RECEIVED = "GoogleCast:ChannelMessageReceived";
 
@@ -222,7 +224,23 @@ public class GoogleCastModule
                     promise.reject("getMediaInfo","No MediaInfo");
                     return;
                 }
-                promise.resolve(mi.toJson().toString());
+
+                List<WebImage> listImages= mi.getMetadata().getImages();
+                WritableArray listOfImageUrl = Arguments.createArray();
+                for(WebImage vi : listImages){
+                    listOfImageUrl.pushString(vi.getUrl().toString());
+                }
+
+                WritableMap map = Arguments.createMap();
+                map.putString("title",mi.getMetadata().getString(MediaMetadata.KEY_TITLE));
+                map.putString("subtitle", mi.getMetadata().getString(MediaMetadata.KEY_SUBTITLE));
+                map.putArray("images",listOfImageUrl);
+
+                WritableMap rnmessage = Arguments.createMap();
+                rnmessage.putString("contentId", mi.getContentId());
+                rnmessage.putMap("metadata", map);
+                promise.resolve(rnmessage);
+                //promise.resolve(mi.toJson().toString());
             }
         });
     }
