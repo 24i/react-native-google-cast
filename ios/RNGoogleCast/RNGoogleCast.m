@@ -539,7 +539,7 @@ RCT_EXPORT_METHOD(getMediaStatus: (RCTPromiseResolveBlock) resolve
       metadata, @"metadata",
       nil];
       
-    [self sendEventWithName:MEDIA_METADATA_CHANGED body:@{@"mediaMetadata":metadataToSend}];
+    [self sendEventWithName:MEDIA_METADATA_CHANGED body:metadataToSend];
     
   }
 
