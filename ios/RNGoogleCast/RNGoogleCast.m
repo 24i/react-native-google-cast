@@ -406,20 +406,20 @@ RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
       images,@"images",
       nil];
 
-      NSDictionary *myDictionary = [[NSDictionary alloc] 
+      NSDictionary *result = [[NSDictionary alloc] 
       initWithObjectsAndKeys:
       mediaInfo.contentID,@"contentId",
       metadata, @"metadata",
       nil];   
 
-      NSMutableDictionary *result = [myDictionary mutableCopy];
-      NSError *error;
-      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:&error];
-      if(error != nil){
-          reject(@"Error geeting media metadata", @"Cant convert it to JSON", error);
-      }
-      NSString *resultAsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-      resolve(resultAsString);
+      // NSMutableDictionary *result = [myDictionary mutableCopy];
+      // NSError *error;
+      // NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:&error];
+      // if(error != nil){
+      //     reject(@"Error geeting media metadata", @"Cant convert it to JSON", error);
+      // }
+      // NSString *resultAsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      resolve(result);
     }
 }
 
